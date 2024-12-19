@@ -42,6 +42,7 @@ class RegisteredUserController extends Controller
             'occupation' => ['nullable', 'string', 'max:255'],
         ]);
 
+        
         $user = User::create([
             'name' => $request->name,
             'kana' => $request->kana,
