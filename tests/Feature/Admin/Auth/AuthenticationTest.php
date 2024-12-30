@@ -17,7 +17,7 @@ class AuthenticationTest extends TestCase
     public function test_login_screen_can_be_rendered(): void
     {
         $response = $this->get('/admin/login');
-
+        /*アクセスできる*/
         $response->assertStatus(200);
     }
 
