@@ -45,5 +45,9 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => 'auth:admin
     Route::resource('restaurants', RestaurantController::class);
 });
 
+// 管理者用のルートグループ、middlewareによる認証などの制御を含めます。
+Route::prefix('admin')->name('admin.')->middleware('auth:admin')->group(function () {
+    Route::resource('categories', Admin\CategoryController::class);
 
+});
 

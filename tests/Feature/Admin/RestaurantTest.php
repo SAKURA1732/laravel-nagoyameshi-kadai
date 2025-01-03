@@ -5,6 +5,7 @@ namespace Tests\Feature\Admin;
 use App\Models\Admin;
 use App\Models\User;
 use App\Models\Restaurant;
+use App\Models\Category;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
@@ -44,7 +45,7 @@ class RestaurantTest extends TestCase
     }
 
     /*3.ログイン済みの管理者は管理者側の店舗一覧にアクセスできる*/
-    public function test_admin_login_screen_can_access_admin_restaurant_show(): void
+    public function test_admin_login_screen_can_access_admin_restaurant_index(): void
     {
         $adminUser = Admin::factory()->create();
         $response = $this->actingAs($adminUser, 'admin')->get(route('admin.restaurants.index', $adminUser));
@@ -121,7 +122,7 @@ class RestaurantTest extends TestCase
         $response->assertRedirect(route('admin.login'));
     }
 
-    /*ログイン済みの管理者は店舗を登録できる*/
+    /*3ログイン済みの管理者は店舗を登録できる*/
     public function test_admin_can_access_admin_restaurants_store()
     {
         $user = User::factory()->create();
