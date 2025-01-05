@@ -2,10 +2,10 @@
 
 namespace Tests\Feature\Admin;
 
+use App\Models\Category;
 use App\Models\Admin;
 use App\Models\User;
 use App\Models\Restaurant;
-use App\Models\Category;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
@@ -131,6 +131,82 @@ class RestaurantTest extends TestCase
         $response = $this->actingAs($adminUser, 'admin')->get(route('admin.restaurants.store'));
         $response->assertStatus(200);
     }
+
+
+
+    /*店舗にカテゴリを正しく設定できない（管理者以外の場合）*/
+    public function test_user_cannot_setting_admin_restaurants()
+    {
+        $user = User::factory()->create();
+    
+        $categories = [];
+        for ($i = 0; $i < 3; $i++) {
+            $categories[] = Category::create(['name' => 'Category ' . $i]);
+        }
+        $categoryIds = array_map(fn($category) => $category->id, $categories);
+        
+        $restaurantData = [
+            'name' => 'Test Restaurant',
+            'description'=> 'Test Restaurant',
+            'lowest_price'=> '1000',
+            'highest_price'=> '3000',
+            'postal_code'=> '1111111',
+            'address' => '123 Test St',
+            'opening_time'=> '10:00:00',
+            'closing_time'=> '20:00:00',
+            'seating_capacity'=> '50',
+        ];
+    
+        $response = $this->actingAs($user)->post(route('admin.restaurants.store'), $restaurantData);
+    
+        // 'category_ids' キーを持たないようにする
+        unset($restaurantData['category_ids']);
+    
+        $this->assertDatabaseMissing('restaurants', $restaurantData);
+        $response->assertRedirect(route('admin.login'));
+    }
+
+    /*店舗にカテゴリを正しく設定できる（管理者の場合）*/
+    public function test_adminUser_can_setting_admin_restaurants()
+    {
+        $adminUser = Admin::factory()->create();
+    
+        $categories = [];
+        for ($i = 0; $i < 3; $i++) {
+            $categories[] = Category::create(['name' => 'Category ' . $i]);
+        }
+        $categoryIds = array_map(fn($category) => $category->id, $categories);
+ 
+    
+        $restaurantData = [
+            'name' => 'テスト',
+            'description' => 'テスト',
+            'lowest_price' => 1000,
+            'highest_price' => 5000,
+            'postal_code' => '0000000',
+            'address' => 'テスト',
+            'opening_time' => '10:00:00',
+            'closing_time' => '20:00:00',
+            'seating_capacity' => 50,
+            'category_ids' => $categoryIds
+        ];
+    
+        $response = $this->actingAs($adminUser, 'admin')->post(route('admin.restaurants.store'), $restaurantData);
+    
+        unset($restaurantData['category_ids']);
+        $this->assertDatabaseHas('restaurants', $restaurantData);
+    
+        foreach ($categoryIds as $categoryId) {
+            $this->assertDatabaseHas('category_restaurant', [
+                'category_id' => $categoryId,
+            ]);
+        }
+    
+        $response->assertRedirect(route('admin.restaurants.index'));
+    }
+
+
+    
 
     /*editアクション（店舗編集ページ）*/
     /*1.未ログインのユーザーは管理者側の店舗編集ページにアクセスできない*/
