@@ -1,10 +1,14 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin;
 use App\Http\Controllers\Admin\HomeController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\RestaurantController;
+use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\CompanyController;
+use App\Http\Controllers\Admin\TermController;
 
 /*
 |--------------------------------------------------------------------------
@@ -45,9 +49,21 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => 'auth:admin
     Route::resource('restaurants', RestaurantController::class);
 });
 
-// 管理者用のルートグループ、middlewareによる認証などの制御を含めます。
 Route::prefix('admin')->name('admin.')->middleware('auth:admin')->group(function () {
     Route::resource('categories', Admin\CategoryController::class);
 
 });
 
+Route::prefix('admin/company')->group(function () {
+    Route::get('/index', [CompanyController::class, 'index'])->name('admin.company.index');
+    Route::get('/edit', [CompanyController::class, 'edit'])->name('admin.company.edit');
+    Route::patch('/edit', [CompanyController::class, 'update'])->name('admin.company.update');
+});
+
+Route::prefix('admin')->name('admin.')->middleware('auth:admin')->group(function () {
+    Route::resource('companies', Admin\CompanyController::class);
+});
+
+Route::prefix('admin')->name('admin.')->middleware('auth:admin')->group(function () {
+    Route::resource('terms', Admin\TermController::class);
+});

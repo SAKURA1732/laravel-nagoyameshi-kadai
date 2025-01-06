@@ -9,6 +9,7 @@ class RegularHoliday extends Model
 {
     use HasFactory;
 
+        // 1つの定休日は複数のレストランを登録できる
     public function restaurants()
      {
          return $this->belongsToMany(Restaurant::class, 'regular_holidays');
