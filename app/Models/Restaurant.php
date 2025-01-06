@@ -9,8 +9,13 @@ class Restaurant extends Model
 {
     use HasFactory;
 
-    public function Categories()
-     {
-         return $this->belongsToMany(Category::class, 'category_restaurant');
-     }
+    public function categories()
+    {
+        return $this->belongsToMany(Category::class, 'category_restaurant');
+    }
+
+    public function regular_holidays()
+    {
+        return $this->belongsToMany(RegularHoliday::class, 'regular_holiday_restaurant'); 
+    }
 }

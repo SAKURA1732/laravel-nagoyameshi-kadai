@@ -6,6 +6,7 @@ use App\Models\Category;
 use App\Models\Admin;
 use App\Models\User;
 use App\Models\Restaurant;
+use App\Models\RegularHoliday;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
@@ -136,20 +137,30 @@ class RestaurantTest extends TestCase
     public function test_user_cannot_setting_admin_restaurants()
     {
         $user = User::factory()->create();
-        $restaurantData  = Restaurant::factory()->make()->toArray();
+        $restaurant = [
+            'name' => 'テスト',
+            'description' => 'テスト',
+            'lowest_price' => 1000,
+            'highest_price' => 5000,
+            'postal_code' => '0000000',
+            'address' => 'テスト',
+            'opening_time' => '10:00:00',
+            'closing_time' => '20:00:00',
+            'seating_capacity' => 50,
+            'category_ids' => $categories
+        ];
         $categories = [];
         for ($i = 0; $i < 3; $i++) {
             $categories[] = Category::create(['name' => 'Category ' . $i]);
         }
         $categoryIds = array_map(fn($category) => $category->id, $categories);
-
-    
-        $response = $this->actingAs($user)->post(route('admin.restaurants.store'), $restaurantData);
+   
+        $response = $this->actingAs($user)->post(route('admin.restaurants.store'), $restaurant);
     
         // 'category_ids' キーを持たないようにする
-        unset($restaurantData['category_ids']);
-
-        $this->assertDatabaseMissing('restaurants', $restaurantData);
+        unset($restaurant['category_ids']);
+    
+        $this->assertDatabaseMissing('restaurants', $restaurant);
         $response->assertRedirect(route('admin.login'));
     }
 
@@ -192,6 +203,67 @@ class RestaurantTest extends TestCase
         $response->assertRedirect(route('admin.restaurants.index'));
     }
 
+    /*店舗に定休日を正しく設定できない（管理者以外の場合）*/
+    public function test_user_cannot_setting_admin_holidays()
+    {
+        $restaurant = Restaurant::factory()->make()->toArray();
+        $user = User::factory()->create();
+        $categories = [];
+        for ($i = 0; $i < 3; $i++) {
+            $categories[] = Category::create(['name' => 'Category ' . $i]);
+        }
+        $categoryIds = array_map(fn($category) => $category->id, $categories);
+        
+
+    
+
+        $regularholidays = RegularHoliday::factory()->count(3)->create();
+        $regular_holiday_ids = $regularholidays->pluck('id')->toArray();
+    
+        $restaurant->categories()->sync($category_ids);
+        $restaurant->regular_holidays()->sync($regular_holiday_ids);
+    
+        $updateData = [
+            'name' => '更新されたレストラン名',
+            'description' => '更新された説明',
+            'lowest_price' => 1200,
+            'highest_price' => 6000,
+            'postal_code' => '1111111',
+            'address' => '更新された住所',
+            'opening_time' => '11:00:00',
+            'closing_time' => '21:00:00',
+            'seating_capacity' => 60,
+            'category_ids' => $category_ids,
+            'regularholiday_ids' => $regular_holiday_ids,
+        ];
+        
+        $response = $this->actingAs($admin, 'admin')->put(route('admin.restaurants.update', $restaurant), $updateData);
+    
+        // Assert basic data update
+        unset($updateData['category_ids']);
+        unset($updateData['regularholiday_ids']);
+        unset($restaurant['updated_at'], $restaurant['created_at']);
+        $this->assertDatabaseHas('restaurants', array_merge(['id' => $restaurant->id], $updateData));
+    
+        // Assert the relations in the database
+        foreach ($category_ids as $category_id) {
+            $this->assertDatabaseHas('category_restaurant', [
+                'restaurant_id' => $restaurant->id,
+                'category_id' => $category_id,
+            ]);
+        }
+    
+        foreach ($regular_holiday_ids as $regular_holiday_id) {
+            $this->assertDatabaseHas('restaurant_regular_holiday', [
+                'restaurant_id' => $restaurant->id,
+                'regular_holiday_id' => $regular_holiday_id,
+            ]);
+        }
+    
+        $response->assertRedirect(route('admin.restaurants.show', $restaurant));
+    }
+
+    /*店舗に定休日を正しく設定できる（管理者の場合）*/
 
     
 
@@ -286,6 +358,7 @@ class RestaurantTest extends TestCase
             'closing_time' => '20:00:00',
             'seating_capacity' => 50,
         ];
+
 
         // 管理者としてログインし、レストランの更新リクエストを送信
         $response = $this->actingAs($adminUser, 'admin')
