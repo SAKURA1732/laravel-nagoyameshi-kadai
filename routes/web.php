@@ -49,15 +49,17 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => 'auth:admin
     Route::resource('restaurants', RestaurantController::class);
 });
 
-Route::prefix('admin')->name('admin.')->middleware('auth:admin')->group(function () {
-    Route::resource('categories', Admin\CategoryController::class);
 
-});
 
 Route::prefix('admin/company')->group(function () {
     Route::get('/index', [CompanyController::class, 'index'])->name('admin.company.index');
     Route::get('/edit', [CompanyController::class, 'edit'])->name('admin.company.edit');
     Route::patch('/edit', [CompanyController::class, 'update'])->name('admin.company.update');
+});
+
+Route::prefix('admin')->name('admin.')->middleware('auth:admin')->group(function () {
+    Route::resource('categories', Admin\CategoryController::class);
+
 });
 
 Route::prefix('admin')->name('admin.')->middleware('auth:admin')->group(function () {
@@ -67,3 +69,4 @@ Route::prefix('admin')->name('admin.')->middleware('auth:admin')->group(function
 Route::prefix('admin')->name('admin.')->middleware('auth:admin')->group(function () {
     Route::resource('terms', Admin\TermController::class);
 });
+

@@ -20,6 +20,7 @@ class CompanyController extends Controller
     public function index()
     {
         $company = Company::first();
+
         return view('admin.company.index', compact('company'));
     }
 
@@ -38,6 +39,7 @@ class CompanyController extends Controller
      */
     public function update(Request $request, Company $company)
     {
+
         $request->validate([
             'name' => 'required',
             'postal_code' => 'required|digits:7',
@@ -49,6 +51,7 @@ class CompanyController extends Controller
             'number_of_employees' => 'required'
         ]);
 
+        $company = Company::first();
         $company->name = $request->input('name');
         $company->postal_code = $request->input('postal_code');
         $company->address = $request->input('address');
@@ -58,8 +61,9 @@ class CompanyController extends Controller
         $company->business = $request->input('business');
         $company->number_of_employees = $request->input('number_of_employees');
 
-        $company->update();
+        $company->save();
 
         return redirect()->route('admin.company.index')->with('flash_message', '会社概要を編集しました。');
     }
 }
+
