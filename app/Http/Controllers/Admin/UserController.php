@@ -29,4 +29,10 @@ class UserController extends Controller
     {
       return view('admin.users.show', compact('user'));
     }
+
+    public function login(Request $request,$user)
+    {
+        session()->flash('successMessage','ログインしました');
+        return redirect('/');
+    }
 }
