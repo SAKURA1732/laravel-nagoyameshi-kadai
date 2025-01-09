@@ -2,24 +2,27 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
-use App\Http\Controllers\Admin\RestaurantController;
-use App\Http\Controllers\Admin\HomeController as AdminHomeController;
+use App\Http\Controllers\UserController  as GeneralUserController;;
+use App\Http\Controllers\Admin\RestaurantController; 
 use App\Http\Controllers\Admin\CategoryController;
-use App\Http\Controllers\Admin\RegularHolidayController;
 use App\Http\Controllers\Admin\CompanyController;
 use App\Http\Controllers\Admin\TermController;
+use App\Http\Controllers\Admin\HomeController as AdminHomeController;
 use App\Http\Controllers\HomeController;
-use App\Http\Controllers\UserController;
+
 
 // 一般ユーザー用ルート
 Route::group(['middleware' => 'guest:admin'], function () {
     // トップページ
     Route::get('/', [HomeController::class, 'index'])->name('home');
      // 会員情報編集ページ
-    Route::get('/user/edit', [UserController::class, 'edit'])->name('user.edit');
+
+    Route::get('/user/{user}/edit', [GeneralUserController::class, 'edit'])->name('user.edit');
+
     
     // 会員情報更新機能
-    Route::put('/user/update', [UserController::class, 'update'])->name('user.update');
+    Route::patch('/user/{user}/update', [GeneralUserController::class, 'update'])->name('user.update');
+    Route::get('/user', [GeneralUserController::class, 'index'])->name('user.index');
 });
 
 // 認証ルート
@@ -31,8 +34,8 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => 'auth:admin
     Route::get('home', [AdminHomeController::class, 'index'])->name('home');
 
     // 会員管理
-    Route::get('users', [UserController::class, 'index'])->name('users.index');
-    Route::get('users/{user}', [UserController::class, 'show'])->name('users.show');
+    Route::get('users', [AdminUserController::class, 'index'])->name('users.index');
+    Route::get('users/{user}', [AdminUserController::class, 'show'])->name('users.show');
 
     // 店舗管理
     Route::get('restaurants', [RestaurantController::class, 'index'])->name('restaurants.index');
@@ -69,4 +72,6 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => 'auth:admin
     Route::get('terms', [TermController::class, 'index'])->name('terms.index');
     Route::get('terms/edit', [TermController::class, 'edit'])->name('terms.edit');
     Route::patch('terms', [TermController::class, 'update'])->name('terms.update');
+
+
 });
