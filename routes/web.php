@@ -1,77 +1,83 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Admin\UserController as AdminUserController;
-use App\Http\Controllers\UserController  as GeneralUserController;;
-use App\Http\Controllers\Admin\RestaurantController; 
-use App\Http\Controllers\Admin\CategoryController;
-use App\Http\Controllers\Admin\CompanyController;
-use App\Http\Controllers\Admin\TermController;
-use App\Http\Controllers\Admin\HomeController as AdminHomeController;
+use App\Http\Middleware\Subscribed;
+use App\Http\Middleware\NotSubscribed;
+use App\Http\Controllers\Admin;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\RestaurantController;
+use App\Http\Controllers\SubscriptionController;
+use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\ReservationController;
+use App\Http\Controllers\FavoriteController;
+use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\TermController;
+use App\Models\Company;
 
+/*
+|--------------------------------------------------------------------------
+| Web Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register web routes for your application. These
+| routes are loaded by the RouteServiceProvider and all of them will
+| be assigned to the "web" middleware group. Make something great!
+|
+*/
 
-// 一般ユーザー用ルート
 Route::group(['middleware' => 'guest:admin'], function () {
-    // トップページ
+
     Route::get('/', [HomeController::class, 'index'])->name('home');
-     // 会員情報編集ページ
 
-    Route::get('/user/{user}/edit', [GeneralUserController::class, 'edit'])->name('user.edit');
+    /*Route::get('/home', [HomeController::class, 'index'])->name('home');*/
 
-    
-    // 会員情報更新機能
-    Route::patch('/user/{user}/update', [GeneralUserController::class, 'update'])->name('user.update');
-    Route::get('/user', [GeneralUserController::class, 'index'])->name('user.index');
+    Route::resource('restaurants', RestaurantController::class)->only(['index', 'show']);
+
+    Route::get('company', [CompanyController::class, 'index'])->name('company.index');
+    Route::get('terms', [TermController::class, 'index'])->name('terms.index');
+
+    Route::group(['middleware' => ['auth', 'verified']], function () {
+        Route::resource('user', UserController::class)->only(['index', 'edit', 'update']);
+
+        Route::resource('restaurants.reviews', ReviewController::class)->only(['index']);
+
+        Route::group(['middleware' => [NotSubscribed::class]], function () {
+            Route::get('subscription/create', [SubscriptionController::class, 'create'])->name('subscription.create');
+            Route::post('subscription', [SubscriptionController::class, 'store'])->name('subscription.store');
+        });
+
+        Route::group(['middleware' => [Subscribed::class]], function () {
+            Route::get('subscription/edit', [SubscriptionController::class, 'edit'])->name('subscription.edit');
+            Route::patch('subscription', [SubscriptionController::class, 'update'])->name('subscription.update');
+            Route::get('subscription/cancel', [SubscriptionController::class, 'cancel'])->name('subscription.cancel');
+            Route::delete('subscription', [SubscriptionController::class, 'destroy'])->name('subscription.destroy');
+
+            Route::resource('restaurants.reviews', ReviewController::class)->only(['create', 'store', 'edit', 'update', 'destroy']);
+
+            Route::resource('reservations', ReservationController::class)->only(['index', 'destroy']);
+            Route::resource('restaurants.reservations', ReservationController::class)->only(['create', 'store']);
+
+            Route::get('favorites', [FavoriteController::class, 'index'])->name('favorites.index');
+            Route::post('favorites/{restaurant_id}', [FavoriteController::class, 'store'])->name('favorites.store');
+            Route::delete('favorites/{restaurant_id}', [FavoriteController::class, 'destroy'])->name('favorites.destroy');
+        });
+
+    });
 });
 
-// 認証ルート
 require __DIR__.'/auth.php';
 
-// 管理者用ルート
 Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => 'auth:admin'], function () {
-    // ホームページ
-    Route::get('home', [AdminHomeController::class, 'index'])->name('home');
+    Route::get('home', [Admin\HomeController::class, 'index'])->name('home');
 
-    // 会員管理
-    Route::get('users', [AdminUserController::class, 'index'])->name('users.index');
-    Route::get('users/{user}', [AdminUserController::class, 'show'])->name('users.show');
+    Route::resource('users', Admin\UserController::class)->only(['index', 'show']);
 
-    // 店舗管理
-    Route::get('restaurants', [RestaurantController::class, 'index'])->name('restaurants.index');
-    Route::get('restaurants/create', [RestaurantController::class, 'create'])->name('restaurants.create');
-    Route::post('restaurants', [RestaurantController::class, 'store'])->name('restaurants.store');
-    Route::get('restaurants/{restaurant}', [RestaurantController::class, 'show'])->name('restaurants.show');
-    Route::get('restaurants/{restaurant}/edit', [RestaurantController::class, 'edit'])->name('restaurants.edit');
-    Route::patch('restaurants/{restaurant}', [RestaurantController::class, 'update'])->name('restaurants.update');
-    Route::delete('restaurants/{restaurant}', [RestaurantController::class, 'destroy'])->name('restaurants.destroy');
+    Route::resource('restaurants', Admin\RestaurantController::class);
 
-    // カテゴリ管理
-    Route::get('categories', [CategoryController::class, 'index'])->name('categories.index');
-    Route::get('categories/create', [CategoryController::class, 'create'])->name('categories.create');
-    Route::post('categories', [CategoryController::class, 'store'])->name('categories.store');
-    Route::get('categories/{category}/edit', [CategoryController::class, 'edit'])->name('categories.edit');
-    Route::patch('categories/{category}', [CategoryController::class, 'update'])->name('categories.update');
-    Route::delete('categories/{category}', [CategoryController::class, 'destroy'])->name('categories.destroy');
+    Route::resource('categories', Admin\CategoryController::class)->only(['index', 'store', 'update', 'destroy']);
 
-    // 定休日管理
-    Route::get('regular-holidays', [RegularHolidayController::class, 'index'])->name('regular_holidays.index');
-    Route::get('regular-holidays/create', [RegularHolidayController::class, 'create'])->name('regular_holidays.create');
-    Route::post('regular-holidays', [RegularHolidayController::class, 'store'])->name('regular_holidays.store');
-    Route::get('regular-holidays/{regularHoliday}', [RegularHolidayController::class, 'show'])->name('regular_holidays.show');
-    Route::get('regular-holidays/{regularHoliday}/edit', [RegularHolidayController::class, 'edit'])->name('regular_holidays.edit');
-    Route::patch('regular-holidays/{regularHoliday}', [RegularHolidayController::class, 'update'])->name('regular_holidays.update');
-    Route::delete('regular-holidays/{regularHoliday}', [RegularHolidayController::class, 'destroy'])->name('regular_holidays.destroy');
+    Route::resource('company', Admin\CompanyController::class)->only(['index', 'edit', 'update']);
 
-    // 会社概要管理
-    Route::get('company', [CompanyController::class, 'index'])->name('company.index');
-    Route::get('company/edit', [CompanyController::class, 'edit'])->name('company.edit');
-    Route::patch('company', [CompanyController::class, 'update'])->name('company.update');
-
-    // 利用規約管理
-    Route::get('terms', [TermController::class, 'index'])->name('terms.index');
-    Route::get('terms/edit', [TermController::class, 'edit'])->name('terms.edit');
-    Route::patch('terms', [TermController::class, 'update'])->name('terms.update');
-
-
+    Route::resource('terms', Admin\TermController::class)->only(['index', 'edit', 'update']);
 });
