@@ -12,8 +12,7 @@
         "laravel/cashier": "^15.6",
         "laravel/framework": "^10.10",
         "laravel/sanctum": "^3.3",
-        "laravel/tinker": "^2.8",
-        "league/flysystem-aws-s3-v3": "^3.29"
+        "laravel/tinker": "^2.8"
     },
     "require-dev": {
         "laravel/breeze": "*",
