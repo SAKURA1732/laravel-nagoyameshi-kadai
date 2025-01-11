@@ -25,8 +25,6 @@ Route::group(['middleware' => 'guest:admin'], function () {
 
     Route::get('/', [HomeController::class, 'index'])->name('home');
 
-    // Route::get('/home', [HomeController::class, 'index'])->name('home');
-
     Route::resource('restaurants', RestaurantController::class)->only(['index', 'show']);
 
     Route::get('company', [CompanyController::class, 'index'])->name('company.index');
