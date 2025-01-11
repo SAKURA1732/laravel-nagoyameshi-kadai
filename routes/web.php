@@ -5,14 +5,9 @@ use App\Http\Middleware\Subscribed;
 use App\Http\Middleware\NotSubscribed;
 use App\Http\Controllers\Admin;
 use App\Http\Controllers\HomeController;
-use App\Http\Controllers\UserController;
 use App\Http\Controllers\RestaurantController;
 use App\Http\Controllers\SubscriptionController;
-use App\Http\Controllers\ReviewController;
-use App\Http\Controllers\ReservationController;
-use App\Http\Controllers\FavoriteController;
-use App\Http\Controllers\CompanyController;
-use App\Http\Controllers\TermController;
+use App\Http\Controllers\UserController;
 use App\Models\Company;
 
 /*
@@ -80,4 +75,18 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => 'auth:admin
     Route::resource('company', Admin\CompanyController::class)->only(['index', 'edit', 'update']);
 
     Route::resource('terms', Admin\TermController::class)->only(['index', 'edit', 'update']);
+});
+
+Route::group(['middleware' => 'guest:admin'], function () {
+    Route::get('home', [HomeController::class, 'index'])->name('home');
+
+});
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('subscription/create', [SubscriptionController::class, 'create'])->middleware([NotSubscribed::class])->name('subscription.create');
+    Route::post('subscription', [SubscriptionController::class, 'store'])->middleware([NotSubscribed::class])->name('subscription.store');
+    Route::get('subscription/edit', [SubscriptionController::class, 'edit'])->middleware([Subscribed::class])->name('subscription.edit');
+    Route::patch('subscription', [SubscriptionController::class, 'update'])->middleware([Subscribed::class])->name('subscription.update');
+    Route::get('subscription/cancel', [SubscriptionController::class, 'cancel'])->middleware([Subscribed::class])->name('subscription.cancel');
+    Route::delete('subscription', [SubscriptionController::class, 'destroy'])->middleware([Subscribed::class])->name('subscription.destroy');
 });

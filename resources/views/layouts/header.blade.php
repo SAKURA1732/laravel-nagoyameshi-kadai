@@ -29,6 +29,7 @@
                             <a class="dropdown-item" href="{{ route('admin.home') }}">ホーム</a>
                             <a class="dropdown-item" href="{{ route('admin.users.index') }}">会員一覧</a>
                             <a class="dropdown-item" href="{{ route('admin.restaurants.index') }}">店舗一覧</a>
+                            
                             <a class="dropdown-item" href="{{ route('admin.categories.index') }}">カテゴリ一覧</a>
                             <a class="dropdown-item" href="{{ route('admin.company.index') }}">会社概要</a>
                             <a class="dropdown-item" href="{{ route('admin.terms.index') }}">利用規約</a>
@@ -68,7 +69,14 @@
 
                                 <a class="dropdown-item" href="{{ route('restaurants.index') }}">店舗一覧</a> 
 
-                                <a class="dropdown-item" href="#">有料プラン登録</a>
+                                @if (Auth::user()->subscribed('premium_plan'))
+                                    <a class="dropdown-item" href="#">予約一覧</a>
+                                    <a class="dropdown-item" href="#">お気に入り一覧</a>
+                                    <a class="dropdown-item" href="{{ route('subscription.edit') }}">お支払い方法</a>
+                                    <a class="dropdown-item" href="{{ route('subscription.cancel') }}">有料プラン解約</a>
+                                @else
+                                    <a class="dropdown-item" href="{{ route('subscription.create') }}">有料プラン登録</a>
+                                @endif
 
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="{{ route('logout') }}"
