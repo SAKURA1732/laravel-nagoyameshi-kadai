@@ -15,7 +15,9 @@ class UserController extends Controller
      * Display a listing of the resource.
      */
     public function index()
+
     {
+        var_dump($user);
         $user = Auth::user();
 
         return view('user.index', compact('user'));
