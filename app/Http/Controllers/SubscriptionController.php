@@ -16,7 +16,9 @@ class SubscriptionController extends Controller
     public function store(Request $request)
     {
         $request->user()->newSubscription(
-            'premium_plan', 'price_1Q2OJvCn6kb1TaWJwhjmcYCr'
+            'premium_plan', 'price_1QgAeu01oFaBB4pPKMq4XCLN'
+            
+            
         )->create($request->paymentMethodId);
 
         return to_route('home')->with('flash_message', '有料プランへの登録が完了しました');

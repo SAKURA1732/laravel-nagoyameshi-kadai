@@ -109,7 +109,7 @@
                                 <div class="row g-0">
                                     <div class="col-md-4">
                                         @if ($restaurant->image !== '')
-                                            <img src="{{ asset('storage/restaurants/' . $restaurant->image) }}" class="card-img-top nagoyameshi-horizontal-card-image">
+                                        <img src="{{ Storage::disk('s3')->url($restaurant->image)->url($restaurant->image) }}"  class="card-img-top nagoyameshi-horizontal-card-image">
                                         @else
                                             <img src="{{ asset('/images/no_image.jpg') }}" class="card-img-top nagoyameshi-horizontal-card-image" alt="画像なし">
                                         @endif

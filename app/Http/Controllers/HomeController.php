@@ -10,6 +10,7 @@ class HomeController extends Controller
 {
     public function index()
     {
+        
         // $highly_rated_restaurantsはレビューの高い順に並べ替え
         $highly_rated_restaurants = Restaurant::orderBy('id', 'desc')->take(6)->get();
         $categories = Category::all(); 

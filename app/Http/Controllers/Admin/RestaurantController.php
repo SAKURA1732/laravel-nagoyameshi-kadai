@@ -66,11 +66,11 @@ class RestaurantController extends Controller
         $restaurant->name = $request->input('name');
         if ($request->hasFile('image')) {
             $image = $request->file('image')->store('restaurants', 's3');
-            $restaurant->image = basename($image);
+            $restaurant->image = Storage::disk('s3')->putFile('public/products', $request->file('image'), 'public');
 
             if ($request->hasFile('image')) {
                 $image = $request->file('image')->store('restaurants', 's3');
-                $restaurant->image = basename($image);
+                $restaurant->image = Storage::disk('s3')->putFile('public/products', $request->file('image'), 'public');
             }
 
 
@@ -139,7 +139,7 @@ class RestaurantController extends Controller
 
         if ($request->hasFile('image')) {
             $image = $request->file('image')->store('public/restaurants');
-            $restaurant->image = basename($image);
+            $restaurant->image = Storage::disk('s3')->putFile('public/products', $request->file('image'), 'public');
         }
 
         $restaurant->save();
