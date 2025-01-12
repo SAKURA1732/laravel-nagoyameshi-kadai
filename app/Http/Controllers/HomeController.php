@@ -18,5 +18,6 @@ class HomeController extends Controller
         $new_restaurants = Restaurant::orderBy('id', 'desc')->take(6)->get();
 
         return view('home', compact('highly_rated_restaurants', 'categories', 'new_restaurants'));
+
     }
 }

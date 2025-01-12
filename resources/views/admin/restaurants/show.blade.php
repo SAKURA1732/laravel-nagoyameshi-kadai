@@ -47,7 +47,7 @@
 
                 <div class="mb-2">
                 @if ($restaurant->image !== '')
-                <img src="{{ Storage::disk('s3')->url($restaurant->image) }}"  class="w-100">
+                <img src="{{ asset('storage/restaurants/' . $restaurant->image) }}"   class="w-100">
                 @else
                 <!-- 画像がない場合の処理（デフォルト画像など）-->
                 <img src="/path/to/default/image.jpg" class="w-100">
