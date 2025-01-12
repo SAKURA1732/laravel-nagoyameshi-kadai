@@ -14,6 +14,9 @@ use Laravel\Cashier\Billable;
 class User extends Authenticatable implements MustVerifyEmail
 {
     use HasApiTokens, HasFactory, Notifiable, Billable;
+    public function reviews(){
+        return $this->hasMany(Review::class);
+    }
 
     /**
      * The attributes that are mass assignable.

@@ -17,9 +17,6 @@ class UserController extends Controller
     public function index()
 
     {
-        var_dump($user);
-        $user = Auth::user();
-
         return view('user.index', compact('user'));
     }
 

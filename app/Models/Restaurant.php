@@ -5,6 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Kyslik\ColumnSortable\Sortable;
+use App\Models\Restaurant;
+use App\Models\Review;
+
+
 
 class Restaurant extends Model
 {
@@ -24,4 +28,9 @@ class Restaurant extends Model
     public $sortable = [ 
         'rating', 'popular','lowest_price'
     ]; 
+
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
+    }
 }

@@ -9,6 +9,7 @@ use App\Http\Controllers\RestaurantController;
 use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\UserController;
 use App\Models\Company;
+use App\Http\Controllers\ReviewController;
 
 /*
 |--------------------------------------------------------------------------
@@ -87,3 +88,4 @@ Route::middleware(['auth'])->group(function () {
     Route::get('subscription/cancel', [SubscriptionController::class, 'cancel'])->middleware([Subscribed::class])->name('subscription.cancel');
     Route::delete('subscription', [SubscriptionController::class, 'destroy'])->middleware([Subscribed::class])->name('subscription.destroy');
 });
+

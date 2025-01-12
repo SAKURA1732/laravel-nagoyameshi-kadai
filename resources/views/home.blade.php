@@ -79,6 +79,10 @@
                                         <span>カテゴリ未設定</span>
                                     @endif
                                 </div>
+                                <p class="card-text">
+                                    <span class="nagoyameshi-star-rating me-1" data-rate="{{ round($highly_rated_restaurant->reviews->avg('score') * 2) / 2 }}"></span>
+                                    {{ number_format(round($highly_rated_restaurant->reviews->avg('score'), 2), 2) }}
+                                </p>
                             </div>
                         </div>
                     </a>
@@ -170,7 +174,7 @@
                 <div class="col">
                     <a href="{{ route('restaurants.show', $new_restaurant) }}" class="link-dark nagoyameshi-card-link">
                         <div class="card h-100">
-                        @if ($new_restaurant->image !== '')
+                            @if ($new_restaurant->image !== '')
                                 <img src="{{ asset('storage/restaurants/' . $new_restaurant->image) }}" class="card-img-top nagoyameshi-vertical-card-image">
                             @else
                                 <img src="{{ asset('/images/no_image.jpg') }}" class="card-img-top nagoyameshi-vertical-card-image" alt="画像なし">
