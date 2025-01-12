@@ -33,12 +33,13 @@
                 </ul>
 
                 <div class="mb-2">
-                    @if ($restaurant->image !== '')
-                    <img src="{{ Storage::disk('s3')->url($restaurant->image)->url($restaurant->image) }}"  class="w-100">
-                    @else
-                    <img src="{{ Storage::disk('s3')->url($restaurant->image)->url($restaurant->image) }}" class="w-100">
-                    @endif
-                </div>
+    @if ($restaurant->image !== '')
+        <img src="{{ Storage::disk('s3')->url($restaurant->image) }}"  class="w-100">
+    @else
+        <!-- 画像がない場合の処理（デフォルト画像など）-->
+        <img src="/path/to/default/image.jpg" class="w-100">
+    @endif
+</div>
 
                 <div class="container">
                     <div class="row pb-2 mb-2 border-bottom">
