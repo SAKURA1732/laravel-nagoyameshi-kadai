@@ -5,9 +5,11 @@ use App\Http\Middleware\Subscribed;
 use App\Http\Middleware\NotSubscribed;
 use App\Http\Controllers\Admin;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\RestaurantController;
 use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\UserController;
+
 use App\Models\Company;
 use App\Http\Controllers\ReviewController;
 
@@ -80,6 +82,7 @@ Route::group(['middleware' => 'guest:admin'], function () {
 
 });
 
+// サブスク用ルート
 Route::middleware(['auth'])->group(function () {
     Route::get('subscription/create', [SubscriptionController::class, 'create'])->middleware([NotSubscribed::class])->name('subscription.create');
     Route::post('subscription', [SubscriptionController::class, 'store'])->middleware([NotSubscribed::class])->name('subscription.store');
@@ -89,3 +92,10 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('subscription', [SubscriptionController::class, 'destroy'])->middleware([Subscribed::class])->name('subscription.destroy');
 });
 
+// 予約ページ用ルート
+Route::middleware(['guest:admin', 'auth', 'subscribed'])->group(function () {
+    Route::get('reservations', [ReservationController::class, 'index'])->name('reservations.index');
+    Route::get('restaurants/{restaurant}/reservations/create', [ReservationController::class, 'create'])->name('restaurants.reservations.create');
+    Route::post('restaurants/{restaurant}/reservations', [ReservationController::class, 'store'])->name('restaurants.reservations.store');
+    Route::delete('reservations/{reservation}', [ReservationController::class, 'destroy'])->name('reservations.destroy');
+});

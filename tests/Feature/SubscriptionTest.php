@@ -36,25 +36,24 @@ class SubscriptionTest extends TestCase
     public function test_premium_user_cannot_access_subscription_create()
     {
         $user = User::factory()->create();
-        $user->newSubscription('default', 'price_1PBCDL2MIT849GWt3ambAejQ')->create('pm_card_visa');
+        $user->newSubscription('default', 'price_1QgQro01oFaBB4pPyBGPVN7w')->create('pm_card_visa');
 
         $response = $this->actingAs($user)->get(route('subscription.create'));
 
-        $response->assertRedirect(route('subscription.edit'));
+        $response->assertRedirect(route('home'));
     }
 
     // ログイン済みの管理者は有料プラン登録ページにアクセスできない
-    /*public function test_admin_cannot_access_subscription_create()
+    public function test_admin_cannot_access_subscription_create()
     {
-        $admin = new Admin();
-        $admin->email = 'admin@example.com';
-        $admin->password = Hash::make('nagoyameshi');
-        $admin->save();
-
-        $response = $this->actingAs($admin, 'admin')->get(route('subscription.create'));
-
+        $admin = Admin::create([
+            'email' => 'admin@example.com',
+            'password' => Hash::make('nagoyameshi'),
+        ]);
+        
+        $response = $this->actingAs($admin, 'admin')->get('/subscription/create');
         $response->assertRedirect(route('admin.home'));
-    }*/
+    }
 
     // 未ログインのユーザーは有料プランに登録できない
     public function test_guest_cannot_access_subscription_store()
@@ -69,7 +68,7 @@ class SubscriptionTest extends TestCase
     }
 
     // ログイン済みの無料会員は有料プランに登録できる
-   /* public function test_free_user_can_access_subscription_store()
+   public function test_free_user_can_access_subscription_store()
     {
         $user = User::factory()->create();
 
@@ -89,7 +88,7 @@ class SubscriptionTest extends TestCase
     public function test_premium_user_cannot_access_subscription_store()
     {
         $user = User::factory()->create();
-        $user->newSubscription('default', 'price_1PBCDL2MIT849GWt3ambAejQ')->create('pm_card_visa');
+        $user->newSubscription('default', 'price_1QgQro01oFaBB4pPyBGPVN7w')->create('pm_card_visa');
 
         $request_parameter = [
             'paymentMethodId' => 'pm_card_visa'
@@ -97,7 +96,7 @@ class SubscriptionTest extends TestCase
 
         $response = $this->actingAs($user)->post(route('subscription.store'), $request_parameter);
 
-        $response->assertRedirect(route('subscription.edit'));
+        $response->assertRedirect(route('home'));
     }
 
     // ログイン済みの管理者は有料プランに登録できない
@@ -139,7 +138,7 @@ class SubscriptionTest extends TestCase
     public function test_premium_user_can_access_subscription_edit()
     {
         $user = User::factory()->create();
-        $user->newSubscription('default', 'price_1PBCDL2MIT849GWt3ambAejQ')->create('pm_card_visa');
+        $user->newSubscription('default', 'price_1QgQro01oFaBB4pPyBGPVN7w')->create('pm_card_visa');
 
         $response = $this->actingAs($user)->get(route('subscription.edit'));
 
@@ -189,7 +188,7 @@ class SubscriptionTest extends TestCase
     public function test_premium_user_can_access_subscription_update()
     {
         $user = User::factory()->create();
-        $user->newSubscription('default', 'price_1PBCDL2MIT849GWt3ambAejQ')->create('pm_card_visa');
+        $user->newSubscription('default', 'price_1QgQro01oFaBB4pPyBGPVN7w')->create('pm_card_visa');
 
         $original_payment_method_id = $user->defaultPaymentMethod()->id;
 
@@ -199,7 +198,7 @@ class SubscriptionTest extends TestCase
 
         $response = $this->actingAs($user)->patch(route('subscription.update'), $request_parameter);
 
-        $response->assertRedirect(route('home'));
+        $response->assertRedirect(route('subscription.create'));
 
         $user->refresh();
         $this->assertNotEquals($original_payment_method_id, $user->defaultPaymentMethod()->id);
@@ -244,7 +243,7 @@ class SubscriptionTest extends TestCase
     public function test_premium_user_can_access_subscription_cancel()
     {
         $user = User::factory()->create();
-        $user->newSubscription('default', 'price_1PBCDL2MIT849GWt3ambAejQ')->create('pm_card_visa');
+        $user->newSubscription('default', 'price_1QgQro01oFaBB4pPyBGPVN7w')->create('pm_card_visa');
 
         $response = $this->actingAs($user)->get(route('subscription.cancel'));
 
@@ -286,26 +285,26 @@ class SubscriptionTest extends TestCase
     public function test_premium_user_can_access_subscription_destroy()
     {
         $user = User::factory()->create();
-        $user->newSubscription('default', 'price_1PBCDL2MIT849GWt3ambAejQ')->create('pm_card_visa');
+        $user->newSubscription('default', 'price_1QgQro01oFaBB4pPyBGPVN7w')->create('pm_card_visa');
 
         $response = $this->actingAs($user)->delete(route('subscription.destroy'));
 
-        $response->assertRedirect(route('home'));
+        $response->assertRedirect(route('subscription.create'));
 
         $user->refresh();
         $this->assertFalse($user->subscribed('premium_plan'));
     }
-*/
+
     // ログイン済みの管理者は有料プランを解約できない
-    // public function test_admin_cannot_access_subscription_destroy()
-    // {
-        // $admin = new Admin();
-        // $admin->email = 'admin@example.com';
-        // $admin->password = Hash::make('nagoyameshi');
-        // $admin->save();
+    public function test_admin_cannot_access_subscription_destroy()
+    {
+    $admin = new Admin();
+    $admin->email = 'admin@example.com';
+    $admin->password = Hash::make('nagoyameshi');
+    $admin->save();
 
-        // $response = $this->actingAs($admin, 'admin')->delete(route('subscription.destroy'));
+    $response = $this->actingAs($admin, 'admin')->delete(route('subscription.destroy'));
 
-        // $response->assertRedirect(route('admin.home'));
-    // }
+    $response->assertRedirect(route('admin.home'));
+    }
 }

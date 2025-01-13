@@ -2,21 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
-
+use App\Models\User;
+use App\Models\Reservation;
 
 class UserController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
 
     {
+        $user = Auth::user();
         return view('user.index', compact('user'));
     }
 
