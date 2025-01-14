@@ -62,14 +62,15 @@ class RestaurantController extends Controller
         return view('restaurants.index', compact('keyword', 'category_id', 'price', 'sorts', 'sorted', 'restaurants', 'categories', 'total'));
     }
 
+    public function ratingSortable($query, $direction) 
+    {
+    return $query->withAvg('reviews', 'score')->orderBy('reviews_avg_score', $direction);
+    }
+
     public function show(Restaurant $restaurant)
     {
         return view('restaurants.show', compact('restaurant'));
     }
 
 
-    public function ratingSortable($query, $direction) 
-    {
-    return $query->withAvg('reviews', 'score')->orderBy('reviews_avg_score', $direction);
-    }
 }

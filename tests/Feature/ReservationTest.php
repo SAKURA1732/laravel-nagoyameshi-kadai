@@ -49,7 +49,7 @@ class ReservationTest extends TestCase
     public function test_premium_user_can_store_reservation()
 {
     $user = User::factory()->create();
-    $user->newSubscription('premium_plan', 'price_1QgQro01oFaBB4pPyBGPVN7w')->create('pm_card_visa'); // 有料プランを設定
+    $user->newSubscription('premium_plan', '1QgQro01oFaBB')->create('pm_card_visa'); // 有料プランを設定
     $this->actingAs($user);
 
     $this->assertTrue($user->subscribed('premium_plan'));

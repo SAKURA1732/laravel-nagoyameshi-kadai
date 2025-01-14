@@ -17,6 +17,8 @@ class HomeController extends Controller
         $categories = Category::all(); 
         // $new_restaurantsから最新の6件を取得する
         $new_restaurants = Restaurant::orderBy('id', 'desc')->take(6)->get();
+        // 予約数が多い順に並び替え
+        $restaurants = Restaurant::withCount('reservations')->orderBy('reservations_count', 'desc')->get();
 
         return view('home', compact('highly_rated_restaurants', 'categories', 'new_restaurants'));
 

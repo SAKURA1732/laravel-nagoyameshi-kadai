@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use App\Models\User;
 
 class SubscriptionController extends Controller
 {
@@ -13,15 +15,12 @@ class SubscriptionController extends Controller
         return view('subscription.create', compact('intent'));
     }
 
-    public function store(Request $request)
-    {
+    public function store(Request $request){
         $request->user()->newSubscription(
-            'premium_plan', 'price_1QgAeu01oFaBB4pPKMq4XCLN'
-            
-            
+            'premium_plan', 'price_1QhAnhGDRzc6XHkpSQ1oylKM'
         )->create($request->paymentMethodId);
-
-        return to_route('home')->with('flash_message', '有料プランへの登録が完了しました');
+    
+        return redirect()->route('user.index')->with('flash_message', '有料プランへの登録が完了しました。');
     }
 
     public function edit()
@@ -44,7 +43,7 @@ class SubscriptionController extends Controller
 
     public function destroy(Request $request)
     {
-        $request->user()->subscription('premium_plan', 'price_1Q2OJvCn6kb1TaWJwhjmcYCr')->cancelNow();
+        $request->user()->subscription('premium_plan', 'price_1QhAnhGDRzc6XHkpSQ1oylKM')->cancelNow();
         return to_route('home')->with('flash_message', '有料プランを解約しました');
     }
 }

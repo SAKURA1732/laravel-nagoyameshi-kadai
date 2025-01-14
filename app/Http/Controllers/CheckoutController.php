@@ -46,7 +46,6 @@ class CheckoutController extends Controller
                 $has_carriage_cost = true;
             }
         }
-
         Stripe::setApiKey(env('STRIPE_SECRET'));
 
         $line_items = [];
