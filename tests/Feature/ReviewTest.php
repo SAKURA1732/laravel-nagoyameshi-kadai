@@ -45,7 +45,7 @@ class ReviewTest extends TestCase
     // 3ログイン済みの有料会員は会員側の他人のレビュー編集ページにアクセスできない
     {
         $user = User::factory()->create(['subscribed'=>true]);//テストユーザー作成
-        $user->newSubscription('premium_plan', 'price_1QhAnhGDRzc6XHkpSQ1oylKM')->create('pm_card_visa'); // プランに加入
+        $user->newSubscription('premium_plan', 'price_1Qh3MY01oFaBB4pP4EjScIQX')->create('pm_card_visa'); // プランに加入
         $this->actingAs($user);//テストユーザーでログイン
         $otherUser = User::factory()->create();
         $restaurant = Restaurant::factory()->create();
@@ -67,7 +67,7 @@ class ReviewTest extends TestCase
     {
         $user = User::factory()->create(['subscribed'=>true]);//テストユーザー作成
         $this->actingAs($user);//テストユーザーでログイン
-        $user->newSubscription('premium_plan', 'price_1QhAnhGDRzc6XHkpSQ1oylKM')->create('pm_card_visa'); // プランに加入
+        $user->newSubscription('premium_plan', 'price_1Qh3MY01oFaBB4pP4EjScIQX')->create('pm_card_visa'); // プランに加入
         $restaurant = Restaurant::factory()->create();
         // レビューを作成
         $review = Review::factory()->create([
