@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\Subscribed;
 use App\Http\Middleware\NotSubscribed;
 use App\Http\Controllers\Admin;
@@ -13,8 +14,7 @@ use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\CheckoutController;
-use Illuminate\Support\Facades\Route;
-
+use App\Models\Company;
 
 /*
 |--------------------------------------------------------------------------

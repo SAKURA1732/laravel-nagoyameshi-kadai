@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', function() {
-const stripeKey = "{{ env('STRIPE_KEY') }}";
 const stripe = Stripe(stripeKey);
 const elements = stripe.elements();
 const cardElement = elements.create('card');

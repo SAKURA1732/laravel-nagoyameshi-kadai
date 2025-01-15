@@ -46,13 +46,20 @@
                 @endif
 
                 <div class="mb-2">
-                @if ($restaurant->image !== '')
-                <img src="{{ asset('storage/restaurants/' . $restaurant->image) }}"   class="w-100">
-                @else
-                <!-- 画像がない場合の処理（デフォルト画像など）-->
-                <img src="/path/to/default/image.jpg" class="w-100">
-                 @endif
-</div>
+                    @if ($restaurant->image !== '')
+                    <div class="mb-2">
+                        @if ($restaurant->image !== '')
+                            
+                            <img src="{{ Storage::disk('s3')->url('restaurants/' . $restaurant->image) }}" alt="Restaurant Image" class="w-100">
+
+                            @else
+                            <img src="{{ asset('/images/no_image.jpg') }}" class="w-100">
+                        @endif
+                    </div>
+                    @else
+                        <img src="{{ asset('/images/no_image.jpg') }}" class="w-100">
+                    @endif
+                </div>
 
                 <div class="container mb-4">
                     <div class="row pb-2 mb-2 border-bottom">

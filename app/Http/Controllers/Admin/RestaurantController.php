@@ -66,14 +66,13 @@ class RestaurantController extends Controller
         $restaurant->name = $request->input('name');
         if ($request->hasFile('image')) {
             $image = $request->file('image')->store('restaurants', 's3');
-            $restaurant->image = basename($image);
+            $restaurant->image =  Storage::disk('s3')->putFile('public
+            ', $request->file('images'), 'public');
 
-            if ($request->hasFile('image')) {
-                $image = $request->file('image')->store('restaurants', 's3');
-                $restaurant->image = basename($image);
-            }
-
-
+        // アップロードされたファイル（name="image"）が存在すれば処理を実行する
+        if ($request->hasFile('image')) {
+            $path = $request->file('image')->store('restaurants', 's3');
+            $restaurant->image = $path;
         } else {
             $restaurant->image = '';
         }
@@ -96,7 +95,7 @@ class RestaurantController extends Controller
         $restaurant->regular_holidays()->sync($regular_holiday_ids);
 
         return redirect()->route('admin.restaurants.index')->with('flash_message', '店舗を登録しました。');
-    }
+    }}
 
     public function edit($id)
     {
@@ -138,8 +137,10 @@ class RestaurantController extends Controller
         $restaurant->seating_capacity = $request->input('seating_capacity');
 
         if ($request->hasFile('image')) {
-            $image = $request->file('image')->store('public/restaurants');
-            $restaurant->image = basename($image);
+            $path = $request->file('image')->store('restaurants', 's3');
+            $restaurant->image = $path;
+        } else {
+            $restaurant->image = '';
         }
 
         $restaurant->save();
