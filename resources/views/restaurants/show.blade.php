@@ -36,6 +36,7 @@
                     </li>
                 </ul>
 
+
                 <div class="mb-2">
     @if ($restaurant->image !== '')
         <img src="{{ Storage::disk('s3')->url($restaurant->image) }}"  class="w-100">
