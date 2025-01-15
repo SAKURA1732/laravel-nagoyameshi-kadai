@@ -12,7 +12,7 @@ class HomeController extends Controller
     public function index()
     {
 
-                $env = App::envitonment(['Laravel']) ? 0 : 1;
+                $env = App::envitonment(['production']) ? 0 : 1;
         
         // $highly_rated_restaurantsはレビューの高い順に並べ替え
         $highly_rated_restaurants = Restaurant::withAvg('reviews', 'score')->orderBy('reviews_avg_score', 'desc')->take(6)->get();
