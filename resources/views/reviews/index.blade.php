@@ -59,7 +59,7 @@
                         <a class="nav-link link-dark" href="{{ route('restaurants.show', $restaurant) }}">トップ</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link link-dark" href="{{ route('restaurants.reservations.create', $restaurant) }}">予約</a>
+                        <a class="nav-link link-dark" href="#">予約</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link active text-white nagoyameshi-bg" aria-current="page" href="{{ route('restaurants.reviews.index', $restaurant) }}">レビュー</a>
@@ -104,7 +104,6 @@
                 @if (Auth::user()->subscribed('premium_plan') && $restaurant->reviews()->where('user_id', Auth::id())->doesntExist())
                     <div class="text-center mt-3">
                         <a href="{{ route('restaurants.reviews.create', $restaurant) }}" class="btn text-white shadow-sm w-50 nagoyameshi-btn">レビューを投稿する</a>
-                        
                     </div>
                 @endif
             </div>

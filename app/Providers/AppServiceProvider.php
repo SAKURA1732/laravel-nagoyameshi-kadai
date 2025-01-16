@@ -27,5 +27,6 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Cashier::useCustomerModel(User::class);
+        Paginator::useBootstrap();
     }
 }
