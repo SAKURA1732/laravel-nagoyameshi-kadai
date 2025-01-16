@@ -104,6 +104,7 @@
                 @if (Auth::user()->subscribed('premium_plan') && $restaurant->reviews()->where('user_id', Auth::id())->doesntExist())
                     <div class="text-center mt-3">
                         <a href="{{ route('restaurants.reviews.create', $restaurant) }}" class="btn text-white shadow-sm w-50 nagoyameshi-btn">レビューを投稿する</a>
+                        
                     </div>
                 @endif
             </div>
