@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Reservation;
 use App\Models\Restaurant;
 use App\Models\User;
+use App\HTTP\Middleware\Subscribed;
 
 class ReservationController extends Controller
 {
