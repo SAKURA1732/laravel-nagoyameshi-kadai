@@ -67,7 +67,7 @@ class RestaurantController extends Controller
     
         // 画像のアップロードとパスの保存
         if ($request->hasFile('image')) {
-            $path = $request->file('image')->store('s3');
+            $path = $request->file('image')->store();
             $restaurant->image = $path;
         } else {
             $restaurant->image = '';
@@ -134,7 +134,7 @@ class RestaurantController extends Controller
 
         // 画像のアップロードとパスの保存
         if ($request->hasFile('image')) {
-            $path = $request->file('image')->store('s3');
+            $path = $request->file('image')->store();
             $restaurant->image = $path;
         }
 
