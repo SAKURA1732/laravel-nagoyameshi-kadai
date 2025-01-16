@@ -98,3 +98,6 @@ Route::middleware(['guest:admin', 'auth', 'subscribed'])->group(function () {
     Route::post('restaurants/{restaurant}/reservations', [ReservationController::class, 'store'])->name('restaurants.reservations.store');
     Route::delete('reservations/{reservation}', [ReservationController::class, 'destroy'])->name('reservations.destroy');
 });
+
+Route::get('/index', [App\Http\Controllers\RestaurantController::class, 'index']);
+

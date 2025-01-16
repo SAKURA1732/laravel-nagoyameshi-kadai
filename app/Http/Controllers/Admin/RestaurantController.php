@@ -133,10 +133,8 @@ class RestaurantController extends Controller
         $restaurant->seating_capacity = $request->input('seating_capacity');
 
         if ($request->hasFile('image')) {
-            $path = $request->file('image')->store('restaurants', 's3');
-            $restaurant->image = $path;
-        } else {
-            $restaurant->image = '';
+            $image = $request->file('image')->store('public/restaurants');
+            $restaurant->image = basename($image);
         }
 
         $restaurant->save();
