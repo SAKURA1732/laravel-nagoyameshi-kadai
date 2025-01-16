@@ -9,7 +9,6 @@ use App\Models\Review;
 use App\Models\User;
 use App\Models\Restaurant;
 
-
 class ReviewController extends Controller
 {
     public function index(Restaurant $restaurant)
