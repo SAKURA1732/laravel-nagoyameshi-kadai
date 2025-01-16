@@ -5,9 +5,10 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Review;
 use App\Models\User;
 use App\Models\Restaurant;
-use App\Models\Review;
+
 
 class ReviewController extends Controller
 {
@@ -35,23 +36,20 @@ class ReviewController extends Controller
         return view('reviews.create',compact('reviews','restaurant'));
     }
 
-    public function store(Request $request,$restaurantId)
+    public function store(Request $request, Restaurant $restaurant) 
     {
-        
         $request->validate([
-           'score' =>'required|numeric|between:1,5',
-           'content' =>'required',
+            'score' => 'required|numeric|between:1,5',
+            'content' => 'required',
         ]);
-
-        $reviews = new Review();
-        $reviews->score = $request->input('score');
-        $reviews->content = $request->input('content');
-        $reviews->restaurant_id = $restaurantId;
-        $reviews->user_id = $request->user()->id; 
-        $reviews->save();
-
-        return redirect()->route('reviews.index', ['restaurant' => $restaurantId])
-        ->with('flash_message', 'レビューを投稿しました');
+        
+        $review = new Review();
+        $review->score = $request->input('score');
+        $review->content = $request->input('content');
+        $review->restaurant_id = $restaurant->id;
+        $review->user_id = $request->user()->id;
+        $review->save();
+        return redirect()->route('restaurants.reviews.index', $restaurant)->with('flash_message', 'レビューを投稿しました。');
 
     }
 
@@ -69,24 +67,29 @@ class ReviewController extends Controller
 
     public function update(Request $request, Restaurant $restaurant, Review $review)
     {
+        if ($review->user_id !== Auth::id()) {
+            return redirect()->route('restaurants.reviews.index', $restaurant)->with('error_message', '不正なアクセスです。');
+        }
+        
         $request->validate([
-            'score' =>'required|numeric|between:1,5',
-            'content' =>'required',
-         ]);
-    
+            'score' => 'required|numeric|between:1,5',
+            'content' => 'required',
+        ]);
+        
         $review->score = $request->input('score');
         $review->content = $request->input('content');
         $review->save();
-    
-        return redirect()->route('reviews.index', ['restaurant' => $restaurant->id])
-            ->with('flash_message', 'レビューを編集しました。');
-    }
+        
+        return redirect()->route('restaurants.reviews.index', $restaurant)->with('flash_message', 'レビューを編集しました。');}
 
-    public function destroy(Review $review)
+    public function destroy(Restaurant $restaurant, Review $review) 
     {
+        if ($review->user_id !== Auth::id()) {
+            return redirect()->route('restaurants.reviews.index', $restaurant)->with('error_message', '不正なアクセスです。');
+        }
+        
         $review->delete();
         
-        return redirect()->route('reviews.index', ['restaurant' => $review->restaurant_id])
-            ->with('flash_message', 'レビューを削除しました。');
+        return redirect()->route('restaurants.reviews.index', $restaurant)->with('flash_message', 'レビューを削除しました。');
     }
 }
