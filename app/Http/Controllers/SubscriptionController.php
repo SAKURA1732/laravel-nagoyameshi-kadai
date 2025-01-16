@@ -46,4 +46,9 @@ class SubscriptionController extends Controller
         $request->user()->subscription('premium_plan', 'price_1Qh3MY01oFaBB4pP4EjScIQX')->cancelNow();
         return to_route('home')->with('flash_message', '有料プランを解約しました');
     }
+
+    public function __construct()
+{
+    $this->middleware('auth');
+}
 }

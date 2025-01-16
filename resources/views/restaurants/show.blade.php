@@ -38,10 +38,9 @@
 
                 <div class="mb-2">
     @if ($restaurant->image !== '')
-        <img src="{{ Storage::disk('s3')->url($restaurant->image) }}"  class="w-100">
+        <img src="https://test-app-nagoyameshi173.s3.ap-northeast-1.amazonaws.com/restaurants/{{ $restaurant->image }}"  class="w-100">
     @else
         <!-- 画像がない場合の処理（デフォルト画像など）-->
-        <img src="{{ asset('/images/no_image.jpg') }}" class="w-100">
         <img src="{{ asset('storage/restaurants/' . $restaurant->image) }}" class="w-100">
     @endif
 </div>
