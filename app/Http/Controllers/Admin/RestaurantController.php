@@ -136,8 +136,6 @@ class RestaurantController extends Controller
         if ($request->hasFile('image')) {
             $path = $request->file('image')->store('restaurants', 's3');
             $restaurant->image = $path;
-        } else {
-            $restaurant->image = '';
         }
 
         $restaurant->save();
