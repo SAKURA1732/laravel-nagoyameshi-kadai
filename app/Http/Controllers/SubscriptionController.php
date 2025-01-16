@@ -10,7 +10,7 @@ use App\Models\User;
 class SubscriptionController extends Controller
 {
     public function create()
-    {// var_dump(env('STRIPE_KEY'));exit;
+    {
         $intent = Auth::user()->createSetupIntent();
         return view('subscription.create', compact('intent'));
     }
