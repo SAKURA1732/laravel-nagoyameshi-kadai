@@ -132,9 +132,12 @@ class RestaurantController extends Controller
         $restaurant->closing_time = $request->input('closing_time');
         $restaurant->seating_capacity = $request->input('seating_capacity');
 
+        // 画像のアップロードとパスの保存
         if ($request->hasFile('image')) {
-            $image = $request->file('image')->store('public/restaurants');
-            $restaurant->image = basename($image);
+            $path = $request->file('image')->store('restaurants', 's3');
+            $restaurant->image = $path;
+        } else {
+            $restaurant->image = '';
         }
 
         $restaurant->save();
