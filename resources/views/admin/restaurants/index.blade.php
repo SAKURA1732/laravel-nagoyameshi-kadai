@@ -14,7 +14,7 @@
                         </div>
                     </form>
 
-                    <a href="{{ route('admin.restaurants.create') }}" class="btn text-white shadow-sm mb-3 nagoyameshi-btn">＋ 新規登録</a>
+                    <a href="{{ route('admin.restaurants.create') }}" class="btn text-white shadow-sm mb-3 nagoyameshi-btn"> 新規登録</a>
                 </div>
 
                 @if (session('flash_message'))
