@@ -59,7 +59,7 @@
                         <a class="nav-link link-dark" href="{{ route('restaurants.show', $restaurant) }}">トップ</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link link-dark" href="#">予約</a>
+                        <a class="nav-link link-dark" href="{{ route('restaurants.reservations.create', $restaurant) }}">予約</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link active text-white nagoyameshi-bg" aria-current="page" href="{{ route('restaurants.reviews.index', $restaurant) }}">レビュー</a>
@@ -73,7 +73,7 @@
                                 {{ $review->user->name }}さん
                             </div>
                             @if ($review->user_id === Auth::id())
-                                <div>
+                            <div>
                                     <a href="{{ route('restaurants.reviews.edit', [$restaurant, $review]) }}" class="me-2">編集</a>
                                     <a href="#" class="link-secondary" data-bs-toggle="modal" data-bs-target="#deleteReviewModal" data-review-id="{{ $review->id }}">削除</a>
                                 </div>

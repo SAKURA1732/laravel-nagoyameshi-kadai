@@ -2,12 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Validation\Rule;
 use App\Models\User;
-use App\Models\Reservation;
+use Illuminate\Validation\Rule;
 
 class UserController extends Controller
 {
@@ -45,9 +43,9 @@ class UserController extends Controller
             'occupation' => 'nullable', 'string', 'max:255',
         ]);
 
-        $user->update($data);
-
-        return redirect()->route('user.index', $user->id)->with('success', '更新しました。');
+        if ($user->id !== Auth::id()) {
+            return redirect()->route('user.index')->with('error_message', '不正なアクセスです。');
+        }
 
 
         $user->name = $request->input('name');
@@ -59,8 +57,8 @@ class UserController extends Controller
         $user->birthday = $request->input('birthday');
         $user->occupation = $request->input('occupation');
 
-        $user->save();
+        $user->update();
 
-        return redirect()->route('user.index')->with('flash_message', '会員情報を編集しました。');
+        return redirect()->route('user.index', compact('user'))->with('flash_message', '会員情報を編集しました。');
     }
 }
