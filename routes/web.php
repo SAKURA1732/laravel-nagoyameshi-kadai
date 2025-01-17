@@ -15,6 +15,7 @@ use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\CheckoutController;
 use App\Models\Company;
+use App\Models\User;
 
 /*
 |--------------------------------------------------------------------------

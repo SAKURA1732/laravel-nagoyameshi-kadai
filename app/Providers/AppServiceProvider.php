@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\URL;
 use Illuminate\Pagination\Paginator;
 use Laravel\Cashier\Cashier;
 
+
 class AppServiceProvider extends ServiceProvider
 {
     /**

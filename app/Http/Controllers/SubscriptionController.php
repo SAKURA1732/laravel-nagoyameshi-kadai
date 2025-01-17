@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use App\Models\User;
 
 class SubscriptionController extends Controller
@@ -41,14 +40,16 @@ class SubscriptionController extends Controller
         return view('subscription.cancel');
     }
 
-    public function destroy(Request $request)
+        public function destroy(Request $request)
     {
-        $request->user()->subscription('premium_plan', 'price_1Qh3MY01oFaBB4pP4EjScIQX')->cancelNow();
-        return to_route('home')->with('flash_message', '有料プランを解約しました');
+        $subscription = $request->user()->subscription('premium_plan');
+    
+        if ($subscription) {
+            $subscription->cancelNow();
+            return redirect()->route('home')->with('flash_message', '有料プランを解約しました。');
+        }
+    
+        return redirect()->route('home')->with('error_message', 'サブスクリプションが見つかりません。');
     }
+}
 
-    public function __construct()
-{
-    $this->middleware('auth');
-}
-}
