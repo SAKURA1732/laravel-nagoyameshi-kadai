@@ -13,17 +13,15 @@ class ReviewController extends Controller
 {
     public function index(Restaurant $restaurant)
     {
-        
-        $reviews = $restaurant->reviews()->paginate(3); 
-
-        $user = Auth::user();
-        if($user->subscribed('premium_plan')){
-            $reviews = Review::orderBy('created_at','desc')->paginate(5);
-        }else{
-            $reviews = Review::orderBy('created_at','desc')->paginate(3);
+        $reviewsQuery = Review::where('restaurant_id', $restaurant->id)->orderBy('created_at', 'desc');
+    
+        if (Auth::user()->subscribed('premium_plan')) {
+            $reviews = $reviewsQuery->paginate(5);
+        } else {
+            $reviews = $reviewsQuery->take(3)->get();
         }
-        
-        return view('reviews.index', compact('restaurant','reviews'));
+       
+        return view('reviews.index', compact('restaurant', 'reviews'));
     }
 
 
