@@ -44,6 +44,8 @@ class SubscriptionController extends Controller
         $request->user()->subscription('premium_plan')->cancelNow();
 
         return redirect()->route('home')->with('flash_message', '有料プランを解約しました。');
+
+    return redirect()->route('home')->with('error_message', 'サブスクリプションが見つかりません。');
 }
 }
 
