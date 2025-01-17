@@ -2,13 +2,13 @@
 
 namespace App\Providers;
 
-use App\HTTP\Middleware\Subscribed;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Pagination\Paginator;
 use Laravel\Cashier\Cashier;
 use App\Models\User;
+use App\Http\Middleware\Subscribed;
 
 class AppServiceProvider extends ServiceProvider
 {
