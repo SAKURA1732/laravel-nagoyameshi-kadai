@@ -25,7 +25,8 @@
                             管理者メニュー
                         </a>
 
-                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                        <div class="
+                        dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                             <a class="dropdown-item" href="{{ route('admin.home') }}">ホーム</a>
                             <a class="dropdown-item" href="{{ route('admin.users.index') }}">会員一覧</a>
                             <a class="dropdown-item" href="{{ route('admin.restaurants.index') }}">店舗一覧</a>
@@ -33,13 +34,13 @@
                             <a class="dropdown-item" href="{{ route('admin.company.index') }}">会社概要</a>
                             <a class="dropdown-item" href="{{ route('admin.terms.index') }}">利用規約</a>
                             <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="{{ route('admin.home') }}"
+                            <a class="dropdown-item" href="{{ route('admin.logout') }}"
                             onclick="event.preventDefault();
                                             document.getElementById('logout-form').submit();">
                                 ログアウト
                             </a>
 
-                            <form id="logout-form" action="{{ route('admin.home') }}" method="POST" class="d-none">
+                            <form id="logout-form" action="{{ route('admin.logout') }}" method="POST" class="d-none">
                                 @csrf
                             </form>
                         </div>
