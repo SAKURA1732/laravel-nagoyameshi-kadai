@@ -33,13 +33,13 @@
                             <a class="dropdown-item" href="{{ route('admin.company.index') }}">会社概要</a>
                             <a class="dropdown-item" href="{{ route('admin.terms.index') }}">利用規約</a>
                             <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="{{ route('admin.logout') }}"
+                            <a class="dropdown-item" href="{{ route('admin.home') }}"
                             onclick="event.preventDefault();
                                             document.getElementById('logout-form').submit();">
                                 ログアウト
                             </a>
 
-                            <form id="logout-form" action="{{ route('admin.logout') }}" method="POST" class="d-none">
+                            <form id="logout-form" action="{{ route('admin.home') }}" method="POST" class="d-none">
                                 @csrf
                             </form>
                         </div>
